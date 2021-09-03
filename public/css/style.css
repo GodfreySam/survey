@@ -1,0 +1,21 @@
+body {
+   background-color: #f9f9fa;
+}
+
+h1 {
+   font-size: 1.7rem;
+}
+
+.brand > img {
+   width: 95px;
+   height: auto;
+}
+
+.btn {
+   margin-top: 0.5rem !important;
+}
+
+input[placeholder], text[placeholder] {
+   font-size: smaller;
+
+}
