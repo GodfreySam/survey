@@ -12,10 +12,10 @@ const Survey = require("./models/Survey");
 dotenv.config({ path: "./configs/config.env" });
 
 const port = process.env.PORT || 3010;
-// const DB_URI = 'mongodb://localhost/waawsurvey-form';
+const DB_URI = 'mongodb://localhost/waawsurvey-form';
 
 // DB Connection
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(DB_URI)
    .then((dbconnect) => console.log('DB connected successfully ::::::::'))
    .catch((error) => console.log('DB connection error:', error.message));
 
@@ -142,6 +142,9 @@ app.post("/survey-data/create", async (req, res, next) => {
          start,
          end,
          userID } = req.body;
+
+      let user = await User.findOne({ user: req.user }).sort({ _id: -1 });
+
       
       if (!title || !description || !place || !start || !end || !userID) {
 
@@ -150,6 +153,11 @@ app.post("/survey-data/create", async (req, res, next) => {
    
       }
 
+      if (userID !== user.userID) {
+         req.flash('error', 'User ID do not match, please check that your ID is correct');
+         res.redirect('/survey');
+      } else {
+         
       let newSurvey = new Survey({
          title,
          description,
@@ -164,7 +172,8 @@ app.post("/survey-data/create", async (req, res, next) => {
 
       /*****flashmessage for alert *****/
       req.flash('success', 'Form submitted successfully, Thank you for taking the survey');
-      res.redirect('/')
+      res.redirect('/');
+      }
 
    } catch (err) {
       console.log(err);
